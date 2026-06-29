@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace TheSanity.GlobalNPC.Bosses.Twinkle
@@ -36,13 +37,19 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
         public override void AI() {
             Player player = Main.player[Projectile.owner];
             
+            // 1. EFEK GLOWING: Menyinari area sekitar bumerang dengan cahaya biru kosmik terang
+            Lighting.AddLight(Projectile.Center, 0.4f, 0.6f, 1.0f);
+
             if (maxShots == 0) {
                 maxShots = Main.rand.Next(5, 8);
             }
 
-            Projectile.rotation += 0.4f * Projectile.direction;
+            // PERBAIKAN ROTASI: Hanya berputar seperti bumerang biasa di FASE 0 dan FASE 2
+            if (AI_State == 0 || AI_State == 2) {
+                Projectile.rotation += 0.4f * Projectile.direction;
+            }
 
-            // FASE 0: TERBANG MENCARI MUSUH
+            // ================= FASE 0: TERBANG MENCARI MUSUH =================
             if (AI_State == 0) {
                 NPC closestNPC = null;
                 float closestDistance = 550f;
@@ -68,7 +75,7 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
                     AI_State = 2;
                 }
             }
-            // FASE 1: MENGORBIT & MENEMBAK
+            // ================= FASE 1: MENGORBIT & MENEMBAK MUSUH =================
             else if (AI_State == 1) {
                 NPC target = Main.npc[TargetIndex];
 
@@ -78,14 +85,28 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
                     return;
                 }
 
-                orbitTimer += 0.07f; 
+                orbitTimer += 0.06f; // Sedikit disesuaikan agar putaran mengorbit lebih smooth
 
                 float patternSpread = (Projectile.identity % 3) * (MathHelper.TwoPi / 3f);
                 float finalAngle = orbitTimer + patternSpread;
-                float orbitRadius = 75f; 
+                float orbitRadius = 80f; 
 
                 Vector2 desiredPos = target.Center + finalAngle.ToRotationVector2() * orbitRadius;
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, desiredPos - Projectile.Center, 0.25f);
+                
+                // PERBAIKAN GERAKAN NATURAL: Membatasi kecepatan agar terbang meluncur mulus ke posisi orbit (TIDAK TELEPORTASI)
+                Vector2 toDesired = desiredPos - Projectile.Center;
+                float distance = toDesired.Length();
+                float travelSpeed = 16f; // Batas kecepatan meluncur mengejar target
+
+                if (distance > 0) {
+                    toDesired.Normalize();
+                    // Menggunakan Lerp kecepatan agar transisi belokan bumerang terasa luwes dan organik
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, toDesired * travelSpeed, 0.15f);
+                }
+
+                // PERBAIKAN ROTASI LOCK: Menghentikan putaran bumerang, memaksa wajah depannya (Kiri) selalu menatap musuh
+                Vector2 dirToTarget = target.Center - Projectile.Center;
+                Projectile.rotation = dirToTarget.ToRotation(); 
 
                 shootTimer++;
                 if (shootTimer >= 20) { 
@@ -93,7 +114,7 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
                     shotCounter++;
 
                     if (Main.myPlayer == Projectile.owner) {
-                        Vector2 shootVel = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitY) * 7f;
+                        Vector2 shootVel = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitY) * 8f;
                         Projectile.NewProjectile(
                             Projectile.GetSource_FromThis(), 
                             Projectile.Center, 
@@ -112,7 +133,7 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
                     }
                 }
             }
-            // FASE 2: PULANG
+            // ================= FASE 2: PULANG CEPAT KE PLAYER =================
             else if (AI_State == 2) {
                 Vector2 returnDirection = player.Center - Projectile.Center;
                 float distanceToPlayer = returnDirection.Length();
@@ -123,7 +144,7 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
                 }
 
                 returnDirection.Normalize();
-                Projectile.velocity = returnDirection * 17f;
+                Projectile.velocity = returnDirection * 18f;
             }
         }
 
@@ -132,8 +153,10 @@ namespace TheSanity.GlobalNPC.Bosses.Twinkle
             Vector2 origin = texture.Size() / 2f;
             float correctedRotation = Projectile.rotation + MathHelper.Pi;
 
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, drawColor, 
-                correctedRotation, origin, Projectile.scale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+            // PERBAIKAN GLOWING SPRITE: Mengganti 'drawColor' menjadi 'Color.White'
+            // Ini membuat sprite mengabaikan bayangan lingkungan sekitar dan menyala konstan di tempat gelap!
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, 
+                correctedRotation, origin, Projectile.scale, SpriteEffects.None, 0f);
             
             return false; 
         }
