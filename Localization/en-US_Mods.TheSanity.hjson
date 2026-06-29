@@ -177,6 +177,16 @@ Items: {
 			"Every Pice of the star feel like broken glass"
 			'''
 	}
+
+	FeatherWireWhip: {
+		DisplayName: Feather Wire Whip
+		Tooltip: 
+			'''
+			Increases minion attack speed by 10% after hitting an enemy
+			Your minions will focus on the last enemy struck
+			'Light as a feather, shocking as a wire'
+			'''
+	}
 }
 
 NPCs: {
@@ -297,6 +307,7 @@ Projectiles: {
 	TwinkleMinionStar.DisplayName: Twinkle Minion Star
 	StarmerangStar.DisplayName: Starmerang Star
 	StarmerangProj.DisplayName: Starmerang
+	FeatherWireWhipProj.DisplayName: Feather Wire Whip Proj
 }
 
 Buffs: {
@@ -338,6 +349,11 @@ Buffs: {
 	TwinkleTwinkleBuff: {
 		Description: '''"She Can't See the enemy but She can Fell Energy from Enemy"'''
 		DisplayName: Twinkle Twinkle Buff
+	}
+
+	FeatherFrenzy: {
+		DisplayName: Feather Frenzy
+		Description: Minion attack speed increased by 10%
 	}
 }
 
