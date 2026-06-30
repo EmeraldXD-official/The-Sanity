@@ -42,7 +42,6 @@ namespace TheSanity.NPCs
             var uiInstance = ModContent.GetInstance<DebuffUISystem>()?.DebuffUI;
 
             // ==================== ANTI-BOSS PROTECTION SYSTEM ====================
-            // Sekarang berjalan mulus karena fungsi AnyBossActive() sudah berada di cakupan class yang benar
             if (AnyBossActive()) {
                 NPC.active = false; // Lenyap seketika
 
@@ -51,7 +50,7 @@ namespace TheSanity.NPCs
                     uiInstance.SelectedNPCID = 0;  
                     uiInstance.PopulateList();     
                     
-                    Main.NewText("🚨 Boss terdeteksi! Dummy otomatis di-despawn demi keamanan dan Dashboard di-reset.", Color.Red);
+                    Main.NewText("?? Boss Detected!", Color.Red);
                 }
                 return; // Stop AI di sini agar tidak memproses kode di bawahnya
             }
@@ -92,10 +91,10 @@ namespace TheSanity.NPCs
                     uiInstance.SelectedNPCID = 0;  
                     uiInstance.PopulateList();     
                     
-                    Main.NewText("⚠️ Dummy left the screen! Control Dashboard settings have been auto-reset.", Color.Orange);
+                    Main.NewText("?? Dummy left the screen! Control Dashboard settings have been auto-reset.", Color.Orange);
                 }
             }
-        } // <-- DISINI! Kemarin kurung penutup method AI() ini hilang, sekarang sudah dikunci dengan aman.
+        }
 
         public override void UpdateLifeRegen(ref int damage) {
             if (NPC.life < NPC.lifeMax) {
@@ -123,8 +122,9 @@ namespace TheSanity.NPCs
                 int assignedBuffID = uiInstance.SelectedBuffID;
 
                 if (assignedBuffID > 0) {
-                    int duration = (assignedBuffID == ModContent.BuffType<ControllCurse>()) ? 18000 : 300;
-                    target.AddBuff(assignedBuffID, duration);
+                    // FIX: Pengecekan kustom ControllCurse dihapus total. 
+                    // Sekarang semua debuff durasinya disamakan rata (300 ticks = 5 detik)
+                    target.AddBuff(assignedBuffID, 300);
                 }
             }
         }
@@ -156,7 +156,6 @@ namespace TheSanity.NPCs
         }
 
         // ==================== HELPER METHOD: DETEKSI BOSS ====================
-        // Method helper mandiri khusus internal class Dummy agar tidak bergantung pada API Main yang tidak stabil
         private bool AnyBossActive() {
             for (int i = 0; i < Main.maxNPCs; i++) {
                 if (Main.npc[i].active && Main.npc[i].boss) {

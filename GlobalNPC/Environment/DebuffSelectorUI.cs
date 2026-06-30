@@ -64,7 +64,7 @@ namespace TheSanity.Buff
 
             // ==================== TABS SYSTEM INITIALIZATION ====================
             
-            // Tab 1: Debuffs (Menggunakan Texture Inferno Potion)
+            // Tab 1: Debuffs (Menggunakan Kustom Icon BuffyIco)
             tabDebuffButton = new UIPanel();
             tabDebuffButton.Left.Set(15f, 0f);
             tabDebuffButton.Top.Set(45f, 0f);
@@ -74,12 +74,13 @@ namespace TheSanity.Buff
             tabDebuffButton.OnLeftClick += (evt, element) => { currentTab = 0; searchFilter = ""; PopulateList(); };
             panel.Append(tabDebuffButton);
 
-            UIImage debuffTabIcon = new UIImage(TextureAssets.Item[ItemID.InfernoPotion]);
+            // FIX: Mengambil tekstur lokal BuffyIco
+            UIImage debuffTabIcon = new UIImage(ModContent.Request<Texture2D>("TheSanity/GlobalNPC/Environment/BuffyIco"));
             debuffTabIcon.Left.Set(41f, 0f);
             debuffTabIcon.Top.Set(4f, 0f);
             tabDebuffButton.Append(debuffTabIcon);
 
-            // Tab 2: Regular Enemies (Menggunakan Zombie Arm - Pure Text Inside)
+            // Tab 2: Regular Enemies (Menggunakan Kustom Icon EnemyIco)
             tabEnemyButton = new UIPanel();
             tabEnemyButton.Left.Set(140f, 0f);
             tabEnemyButton.Top.Set(45f, 0f);
@@ -89,12 +90,13 @@ namespace TheSanity.Buff
             tabEnemyButton.OnLeftClick += (evt, element) => { currentTab = 1; searchFilter = ""; PopulateList(); };
             panel.Append(tabEnemyButton);
 
-            UIImage enemyTabIcon = new UIImage(TextureAssets.Item[ItemID.ZombieArm]);
+            // FIX: Mengambil tekstur lokal EnemyIco
+            UIImage enemyTabIcon = new UIImage(ModContent.Request<Texture2D>("TheSanity/GlobalNPC/Environment/EnemyIco"));
             enemyTabIcon.Left.Set(41f, 0f);
             enemyTabIcon.Top.Set(4f, 0f);
             tabEnemyButton.Append(enemyTabIcon);
 
-            // Tab 3: Bosses (Menggunakan Suspicious Looking Eye)
+            // Tab 3: Bosses (Menggunakan Kustom Icon BossyIco)
             tabBossButton = new UIPanel();
             tabBossButton.Left.Set(265f, 0f);
             tabBossButton.Top.Set(45f, 0f);
@@ -104,7 +106,8 @@ namespace TheSanity.Buff
             tabBossButton.OnLeftClick += (evt, element) => { currentTab = 2; searchFilter = ""; PopulateList(); };
             panel.Append(tabBossButton);
 
-            UIImage bossTabIcon = new UIImage(TextureAssets.Item[ItemID.SuspiciousLookingEye]);
+            // FIX: Mengambil tekstur lokal BossyIco
+            UIImage bossTabIcon = new UIImage(ModContent.Request<Texture2D>("TheSanity/GlobalNPC/Environment/BossyIco"));
             bossTabIcon.Left.Set(41f, 0f);
             bossTabIcon.Top.Set(4f, 0f);
             tabBossButton.Append(bossTabIcon);
@@ -303,8 +306,8 @@ namespace TheSanity.Buff
                     if (headIndex != -1 && headIndex < TextureAssets.NpcHeadBoss.Length) {
                         textureAsset = TextureAssets.NpcHeadBoss[headIndex];
                     } else {
-                        // Fallback aman jika boss custom dari mod lain tidak punya ikon kepala minimap
-                        textureAsset = TextureAssets.Item[ItemID.SuspiciousLookingEye];
+                        // FIX: Fallback diganti ke BossyIco lokal biar ga pakai Suspicious Looking Eye vanilla lagi
+                        textureAsset = ModContent.Request<Texture2D>("TheSanity/GlobalNPC/Environment/BossyIco");
                     }
                 }
 
