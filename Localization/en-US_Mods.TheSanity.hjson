@@ -195,6 +195,16 @@ Items: {
 		RMB when hold this item to open menu for edit dummy stats
 		'''
 	}
+	DivineSpiderScythe: {
+		DisplayName: Divine Spider Scythe
+		Tooltip:
+			'''
+			Strikes enemies with divine silk.
+			Automatically gains an attack speed burst every 5 orbs charged.
+			Orbs charge automatically over time.
+			         
+			'''
+	}
 }
 
 NPCs: {
