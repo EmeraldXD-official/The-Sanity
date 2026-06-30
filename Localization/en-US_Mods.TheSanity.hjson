@@ -187,6 +187,14 @@ Items: {
 			'Light as a feather, shocking as a wire'
 			'''
 	}
+
+	DummyTool: {
+		DisplayName: Mega Dummy
+		Tooltip:
+		'''
+		RMB when hold this item to open menu for edit dummy stats
+		'''
+	}
 }
 
 NPCs: {
@@ -200,6 +208,7 @@ NPCs: {
 	SpaceRainCloudNPC.DisplayName: Cloudy
 	GoldenStinger.DisplayName: Golden Stinger
 	Twinkle.DisplayName: Twinkle, The Mini Stars Guardian
+	DummyTargetNPC.DisplayName: Mega Dummy
 }
 
 Projectiles: {
