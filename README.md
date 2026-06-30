@@ -1,2 +1,2 @@
-# The-Sanity
+# TheSanity
 Wong saya suka kok anu anu
