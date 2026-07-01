@@ -1,0 +1,6 @@
+displayName = Re:Zero White Whale Mod
+author = Izhar
+version = 1.0
+homepage = 
+side = Both
+avatar = icon.png
